@@ -1,0 +1,43 @@
+.header {
+    grid-area: header;
+    background: linear-gradient(to bottom, rgb(39 170 225 / 80%), rgb(28, 117, 188));
+    box-shadow: 2px 2px 5px;
+}
+
+.header img {
+    width: 60px;
+    height: 55px;
+    opacity: 0.9;
+}
+
+.login {
+    float: right;
+    color: #fcfc02;
+    text-decoration: none;
+}
+
+.loginTitle {
+    float: right;
+    color: #fcfc02;
+}
+
+.myButton {
+    background: rgba(39, 170, 225, 0.8);
+    border-radius:6px;
+    border:1px solid #84bbf3;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-family: Arial, sans-serif;
+    font-size:15px;
+    font-weight:bold;
+    padding:6px 24px;
+    text-decoration:none;
+}
+.myButton:hover {
+    background: #80b5ea linear-gradient(to bottom, #80b5ea 5%, #bddbfa 100%);
+}
+.myButton:active {
+    position:relative;
+    top:1px;
+}

@@ -1,0 +1,14 @@
+.intro {
+    background: linear-gradient(to bottom, rgb(39 170 225 / 80%), rgb(28 117 188 / 80%));
+    box-shadow: 2px 2px 5px;
+}
+
+.intro img {
+    width: 80px;
+    border-radius: 80%;
+}
+
+.name {
+    padding-top: 25px;
+    text-align: center;
+}

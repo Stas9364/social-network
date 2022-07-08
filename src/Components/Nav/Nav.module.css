@@ -1,0 +1,23 @@
+.nav {
+    grid-line:  'nav' ;
+    background: linear-gradient(to bottom, rgb(39 170 225 / 80%), rgb(28 117 188 / 80%));
+    box-shadow: 2px 2px 5px;
+}
+
+.active {
+    color: gold;
+    text-decoration: none;
+
+}
+
+.item {
+    color: white;
+    padding: 10px;
+    /*padding-top: 10px;*/
+    /*padding-left: 10px;*/
+    text-decoration: none;
+}
+
+.clear {
+    height: 20px;
+}
