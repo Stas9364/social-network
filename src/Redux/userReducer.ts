@@ -102,7 +102,7 @@ export const setButtonDisable = (userId: number, isFetching: boolean) => ({
 
 //////Thunk
 
-export const getUsers = (pageSize: number, currentPage: number): AppThunk => (dispatch) => {
+export const requestUsers = (pageSize: number, currentPage: number): AppThunk => (dispatch) => {
 
     dispatch(setIsFetching(true));
     UsersAPI.getUsers(pageSize, currentPage)
