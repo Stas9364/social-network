@@ -1,5 +1,5 @@
 import {Header} from './Header';
-import React from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import { InitStateType, logout} from '../../Redux/authReducer';
 import {AppStateType} from '../../Redux/reduxStore';
@@ -13,7 +13,7 @@ type MapDispatchPropsType = {
 }
 
 
-class HeaderContainer extends React.Component<HeaderContainerPropsType> {
+class HeaderContainer extends Component<HeaderContainerPropsType> {
 
     render() {
         return (

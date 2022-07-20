@@ -63,7 +63,6 @@ type LoginFormPropsType = {
 }
 
 const LoginForm = (props: LoginFormPropsType) => {
-
     const {
         register,
         handleSubmit,

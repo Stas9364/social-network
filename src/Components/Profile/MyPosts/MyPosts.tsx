@@ -8,7 +8,6 @@ import {AddTextForm} from '../../commons/AddTextForm/AddTextForm';
 
 
 export const MyPosts = () => {
-
     const dispatch = useDispatch();
     const profilePage = useSelector<AppStateType, InitialStateType>(state => state.profilePage);
 

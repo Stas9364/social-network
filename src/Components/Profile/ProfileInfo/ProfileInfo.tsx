@@ -3,9 +3,9 @@ import {Preloader} from '../../commons/Preloader/Preloader';
 import {PropsType} from '../Profile';
 import React from 'react';
 import ProfileStatus from './ProfileStatus/ProfileStatus';
+import {ProfileStatusHook} from './ProfileStatus/ProfileStatusHook';
 
 export const ProfileInfo: React.FC<PropsType> = ({profile,status,updateStatus}) => {
-
     if (!profile) {
         return <Preloader/>;
     }
@@ -27,7 +27,11 @@ export const ProfileInfo: React.FC<PropsType> = ({profile,status,updateStatus}) 
                     alt='main'
                 />
 
-                <ProfileStatus
+                {/*<ProfileStatus*/}
+                {/*    status={status}*/}
+                {/*    updateStatus={updateStatus}*/}
+                {/*/>*/}
+                <ProfileStatusHook
                     status={status}
                     updateStatus={updateStatus}
                 />

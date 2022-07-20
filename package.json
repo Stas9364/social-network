@@ -52,5 +52,8 @@
   },
   "devDependencies": {
     "eslint-plugin-react": "^7.30.0"
+  },
+  "resolutions": {
+    "@types/react": "^17.0.41"
   }
 }

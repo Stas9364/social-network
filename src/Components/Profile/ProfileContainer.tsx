@@ -44,7 +44,6 @@ class ProfileContainer extends React.Component<ProfileContainerPropsType & PathP
     };
 
     render() {
-
         return (
             <div>
                 <Profile
@@ -81,7 +80,7 @@ const mapStateToProps = (state: AppStateType): MapStatePropsType => {
 export default compose<React.ComponentType>(
     connect(mapStateToProps, {getUserDescription, getStatus, updateStatus}),
     withRouter,
-    withRedirectComponent
+    // withRedirectComponent
 )(ProfileContainer);
 
 
