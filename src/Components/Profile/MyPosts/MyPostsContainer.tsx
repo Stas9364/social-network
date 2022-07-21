@@ -1,5 +1,5 @@
 import {
-    addMyPosts, InitialStateType, updateLikesCounter,
+    addMyPosts, PostsType, updateLikesCounter,
 } from '../../../Redux/profileReducer';
 import {MyPosts} from './MyPosts';
 import {connect} from 'react-redux';
@@ -7,7 +7,7 @@ import {Dispatch} from 'redux';
 import {AppStateType} from '../../../Redux/reduxStore';
 
 type mapStatePropsType = {
-    profilePage: InitialStateType,
+    myPosts: Array<PostsType>,
 }
 
 type mapDispatchProps = {
@@ -17,7 +17,7 @@ type mapDispatchProps = {
 
 const mapStateToProps = (state: AppStateType): mapStatePropsType => {
     return {
-        profilePage: state.profilePage,
+        myPosts: state.profilePage.myPosts,
     };
 };
 

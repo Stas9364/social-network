@@ -1,18 +1,18 @@
 import style from './MyPosts.module.css';
 import {Post} from './Post/Post';
-import React from 'react';
-import {addMyPosts, InitialStateType} from '../../../Redux/profileReducer';
+import React, {useCallback} from 'react';
+import {addMyPosts, PostsType} from '../../../Redux/profileReducer';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppStateType} from '../../../Redux/reduxStore';
 import {AddTextForm} from '../../commons/AddTextForm/AddTextForm';
 
 
-export const MyPosts = () => {
+export const MyPosts = React.memo (() => {
     const dispatch = useDispatch();
-    const profilePage = useSelector<AppStateType, InitialStateType>(state => state.profilePage);
+    const myPosts = useSelector<AppStateType, Array<PostsType>>(state => state.profilePage.myPosts);
 
     const posts =
-        profilePage.myPosts.map((p) => (
+        myPosts.map((p) => (
             <Post
                 key={p.id}
                 id={p.id}
@@ -21,7 +21,7 @@ export const MyPosts = () => {
             />
         ));
 
-    const onAddPost = (text: string) => dispatch(addMyPosts(text));
+    const onAddPost = useCallback ((text: string) => dispatch(addMyPosts(text)), []);
 
     return (
         <div className={style.posts}>
@@ -40,6 +40,6 @@ export const MyPosts = () => {
 
         </div>
     );
-};
+} );
 
 

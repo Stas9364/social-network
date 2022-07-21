@@ -10,7 +10,7 @@ type TextAreaType = {
     text: string
 }
 
-export const AddTextForm = (props: TextFormProps) => {
+export const AddTextForm = React.memo((props: TextFormProps) => {
     const {
         control,
         handleSubmit,
@@ -44,6 +44,6 @@ export const AddTextForm = (props: TextFormProps) => {
 
         </form>
     );
-};
+});
 
 
