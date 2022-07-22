@@ -4,7 +4,7 @@ import {AppThunk} from './reduxStore';
 
 let id = () => nanoid(5);
 
-export enum ACTION_TYPE {
+export enum PROFILE_TYPE {
     ADD_MY_POST = 'ADD-MY-POST',
     UPDATE_LIKES_COUNTER = 'UPDATE-LIKES-COUNTER',
     SET_USER_PROFILE = 'SET-USER-PROFILE',
@@ -42,33 +42,24 @@ export const initialState = {
 
 export const profileReducer = (state: InitialStateType = initialState, action: ProfileActionType): InitialStateType => {
     switch (action.type) {
-        case ACTION_TYPE.ADD_MY_POST:
+        case PROFILE_TYPE.ADD_MY_POST:
             return {
                 ...state,
-                myPosts: [ {id: id(), message: action.text, likesCount: state.newLikesCounter}, ...state.myPosts],
+                myPosts: [{id: id(), message: action.text, likesCount: state.newLikesCounter}, ...state.myPosts],
             };
-        case ACTION_TYPE.UPDATE_LIKES_COUNTER:
+        case PROFILE_TYPE.UPDATE_LIKES_COUNTER:
             return {
                 ...state,
                 myPosts: [...state.myPosts.map(el => el.id === action.id
-                        ? {...el, likesCount: el.likesCount + 1}
-                        : el)]
+                    ? {...el, likesCount: el.likesCount + 1}
+                    : el)]
             };
-        case ACTION_TYPE.SET_USER_PROFILE:
-            return {
-                ...state,
-                profile: action.profile
-            };
-        case ACTION_TYPE.GET_USER_STATUS:
-            return {
-                ...state,
-                status: action.status
-            };
-        case ACTION_TYPE.UPDATE_USER_STATUS:
-            return {
-                ...state,
-                status: action.status
-            };
+        case PROFILE_TYPE.SET_USER_PROFILE:
+            return {...state, profile: action.profile};
+        case PROFILE_TYPE.GET_USER_STATUS:
+            return {...state, status: action.status};
+        case PROFILE_TYPE.UPDATE_USER_STATUS:
+            return {...state, status: action.status};
         default:
             return state;
     }
@@ -76,33 +67,27 @@ export const profileReducer = (state: InitialStateType = initialState, action: P
 
 /////Actions
 
-export const addMyPosts = (text: string) => ({type: ACTION_TYPE.ADD_MY_POST, text} as const);
-export const updateLikesCounter = (id: string) => ({type: ACTION_TYPE.UPDATE_LIKES_COUNTER, id} as const);
-export const setUserProfile = (profile: UserProfileType) => ({type: ACTION_TYPE.SET_USER_PROFILE, profile} as const);
-export const getUserStatus = (status: string) => ({type: ACTION_TYPE.GET_USER_STATUS, status} as const);
-export const updateUserStatus = (status: string) => ({type: ACTION_TYPE.UPDATE_USER_STATUS, status} as const);
+export const addMyPosts = (text: string) => ({type: PROFILE_TYPE.ADD_MY_POST, text} as const);
+export const updateLikesCounter = (id: string) => ({type: PROFILE_TYPE.UPDATE_LIKES_COUNTER, id} as const);
+export const setUserProfile = (profile: UserProfileType) => ({type: PROFILE_TYPE.SET_USER_PROFILE, profile} as const);
+export const getUserStatus = (status: string) => ({type: PROFILE_TYPE.GET_USER_STATUS, status} as const);
+export const updateUserStatus = (status: string) => ({type: PROFILE_TYPE.UPDATE_USER_STATUS, status} as const);
 
 //////Thunk
 
-export const getUserDescription = (userId: number): AppThunk => (dispatch) => {
-    ProfileAPI.getProfile(userId)
-        .then(response => {
-            dispatch(setUserProfile(response.data));
-        });
+export const getUserDescription = (userId: number): AppThunk => async (dispatch) => {
+    const response = await ProfileAPI.getProfile(userId);
+    dispatch(setUserProfile(response.data));
 };
 
-export const getStatus = (userId: number): AppThunk => (dispatch) => {
-    ProfileAPI.getStatus(userId)
-        .then(response => {
-            dispatch(getUserStatus(response.data));
-        });
+export const getStatus = (userId: number): AppThunk => async (dispatch) => {
+    const response = await ProfileAPI.getStatus(userId);
+    dispatch(getUserStatus(response.data));
 };
 
-export const updateStatus = (newStatus: string): AppThunk => (dispatch) => {
-    ProfileAPI.updateStatus(newStatus)
-        .then(response => {
-            if (response.data.resultCode === 0) {
-                dispatch(updateUserStatus(newStatus));
-            }
-        });
+export const updateStatus = (newStatus: string): AppThunk => async (dispatch) => {
+    const response = await ProfileAPI.updateStatus(newStatus);
+    if (response.data.resultCode === 0) {
+        dispatch(updateUserStatus(newStatus));
+    }
 };

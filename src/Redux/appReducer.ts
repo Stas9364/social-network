@@ -1,7 +1,7 @@
 import {AppThunk} from './reduxStore';
 import {userAuthorization} from './authReducer';
 
-export enum ACTIONS_TYPE {
+export enum APP_TYPE {
     INITIALIZED_SUCCESS = 'INITIALIZED_SUCCESS'
 }
 
@@ -14,10 +14,8 @@ export const initState = {
 
 export const appReducer = (state: InitStateType = initState, action: AppActionsType): InitStateType => {
     switch (action.type) {
-        case ACTIONS_TYPE.INITIALIZED_SUCCESS:
-            return {
-                ...state, initialized: true
-            };
+        case APP_TYPE.INITIALIZED_SUCCESS:
+            return {...state, initialized: true};
         default:
             return state;
     }
@@ -25,7 +23,7 @@ export const appReducer = (state: InitStateType = initState, action: AppActionsT
 
 /////Actions
 
-export const initializedSuccess = () => ({type: ACTIONS_TYPE.INITIALIZED_SUCCESS} as const);
+export const initializedSuccess = () => ({type: APP_TYPE.INITIALIZED_SUCCESS} as const);
 
 /////Thunk
 

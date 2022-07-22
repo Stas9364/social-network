@@ -14,7 +14,9 @@ export type MessagesType = {
     message: string
 }
 
-const ADD_NEW_MESSAGE = 'ADD-NEW-MESSAGE';
+export enum DIALOGS_TYPE {
+    ADD_NEW_MESSAGE= 'ADD-NEW-MESSAGE'
+}
 
 export const initialState = {
     dialogsData: [
@@ -37,16 +39,13 @@ export const initialState = {
 
 const dialogsReducer = (state: InitialStateType = initialState, action: DialogsActionType): InitialStateType => {
     switch (action.type) {
-        case ADD_NEW_MESSAGE:
-            return {
-                ...state,
-                messages: [...state.messages, {id: id(), message: action.text}],
-            };
+        case DIALOGS_TYPE.ADD_NEW_MESSAGE:
+            return {...state, messages: [...state.messages, {id: id(), message: action.text}]};
         default:
             return state;
     }
 };
 
-export const AddNewMessageAC = (text: string) => ({type: ADD_NEW_MESSAGE, text} as const);
+export const AddNewMessageAC = (text: string) => ({type: DIALOGS_TYPE.ADD_NEW_MESSAGE, text} as const);
 
 export default dialogsReducer;

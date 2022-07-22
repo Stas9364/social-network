@@ -1,7 +1,8 @@
 import {UsersAPI, UserType} from '../api/api';
 import {AppThunk} from './reduxStore';
+import {Dispatch} from 'redux';
 
-export enum ACTIONS_TYPE {
+export enum USER_TYPE {
     FOLLOW_UNFOLLOW = 'FOLLOW-UNFOLLOW',
     SET_USERS = 'SET-USERS',
     SET_CURRENT_PAGE = 'SET-CURRENT-PAGE',
@@ -37,35 +38,22 @@ const initialState: InitialStateType = {
 
 const userReducer = (state: InitialStateType = initialState, action: UserActionType): InitialStateType => {
     switch (action.type) {
-        case ACTIONS_TYPE.FOLLOW_UNFOLLOW:
+        case USER_TYPE.FOLLOW_UNFOLLOW:
             return {
                 ...state,
-                users: state.users.map(u => u.id === action.userId ? {
-                    ...u,
-                    followed: !action.currentSubscriptionStatus
-                } : u)
+                users: state.users.map(u => u.id === action.userId
+                    ? {...u, followed: !action.currentSubscriptionStatus}
+                    : u)
             };
-        case ACTIONS_TYPE.SET_USERS:
-            return {
-                ...state,
-                users: [...action.users]
-            };
-        case ACTIONS_TYPE.SET_CURRENT_PAGE:
-            return {
-                ...state,
-                currentPage: action.currentPage
-            };
-        case ACTIONS_TYPE.SET_TOTAL_USERS_COUNT:
-            return {
-                ...state,
-                totalUsersCount: action.totalUsersCount
-            };
-        case ACTIONS_TYPE.SET_IS_FETCHING:
-            return {
-                ...state,
-                isFetching: action.isFetching
-            };
-        case ACTIONS_TYPE.SET_BUTTON_DISABLE:
+        case USER_TYPE.SET_USERS:
+            return {...state, users: [...action.users]};
+        case USER_TYPE.SET_CURRENT_PAGE:
+            return {...state, currentPage: action.currentPage};
+        case USER_TYPE.SET_TOTAL_USERS_COUNT:
+            return {...state, totalUsersCount: action.totalUsersCount};
+        case USER_TYPE.SET_IS_FETCHING:
+            return {...state, isFetching: action.isFetching};
+        case USER_TYPE.SET_BUTTON_DISABLE:
             return {
                 ...state,
                 followingInProgress: action.isFetching
@@ -80,59 +68,56 @@ const userReducer = (state: InitialStateType = initialState, action: UserActionT
 //////Actions
 
 export const follow = (userId: number, currentSubscriptionStatus: boolean) => ({
-    type: ACTIONS_TYPE.FOLLOW_UNFOLLOW,
+    type: USER_TYPE.FOLLOW_UNFOLLOW,
     userId,
     currentSubscriptionStatus
 } as const);
 
-export const setUsers = (users: UserType[]) => ({type: ACTIONS_TYPE.SET_USERS, users} as const);
+export const setUsers = (users: UserType[]) => ({type: USER_TYPE.SET_USERS, users} as const);
 
-export const setCurrentPage = (currentPage: number) => ({type: ACTIONS_TYPE.SET_CURRENT_PAGE, currentPage} as const);
+export const setCurrentPage = (currentPage: number) => ({type: USER_TYPE.SET_CURRENT_PAGE, currentPage} as const);
 
 export const setTotalUsersCount = (totalUsersCount: number) => ({
-    type: ACTIONS_TYPE.SET_TOTAL_USERS_COUNT,
+    type: USER_TYPE.SET_TOTAL_USERS_COUNT,
     totalUsersCount
 } as const);
 
-export const setIsFetching = (isFetching: boolean) => ({type: ACTIONS_TYPE.SET_IS_FETCHING, isFetching} as const);
+export const setIsFetching = (isFetching: boolean) => ({type: USER_TYPE.SET_IS_FETCHING, isFetching} as const);
 
 export const setButtonDisable = (userId: number, isFetching: boolean) => ({
-    type: ACTIONS_TYPE.SET_BUTTON_DISABLE, userId, isFetching
+    type: USER_TYPE.SET_BUTTON_DISABLE, userId, isFetching
 } as const);
 
 //////Thunk
 
-export const requestUsers = (pageSize: number, currentPage: number): AppThunk => (dispatch) => {
-
+export const requestUsers = (pageSize: number, currentPage: number): AppThunk => async (dispatch) => {
     dispatch(setIsFetching(true));
-    UsersAPI.getUsers(pageSize, currentPage)
-        .then((response) => {
-            dispatch(setUsers(response.data.items));
-            dispatch(setTotalUsersCount(response.data.totalCount));
-            dispatch(setIsFetching(false));
-        });
+    const response = await UsersAPI.getUsers(pageSize, currentPage);
+    dispatch(setUsers(response.data.items));
+    dispatch(setTotalUsersCount(response.data.totalCount));
+    dispatch(setIsFetching(false));
 };
 
-export const unfollowedUser = (userId: number, followed: boolean): AppThunk => (dispatch) => {
+const followUnfollowFlow = async (
+    dispatch: Dispatch,
+    userId: number,
+    followed: boolean,
+    apiMethod: (userId: number) => Promise<any>
+) => {
     dispatch(setButtonDisable(userId, true));
-    UsersAPI.unfollow(userId)
-        .then((response) => {
-            if (response.data.resultCode === 0) {
-                dispatch(follow(userId, followed));
-            }
-            dispatch(setButtonDisable(userId, false));
-        });
+    const response = await apiMethod(userId);
+    if (response.data.resultCode === 0) {
+        dispatch(follow(userId, followed));
+    }
+    dispatch(setButtonDisable(userId, false));
 };
 
-export const followedUser = (userId: number, followed: boolean): AppThunk => (dispatch) => {
-    dispatch(setButtonDisable(userId, true));
-    UsersAPI.follow(userId)
-        .then((response) => {
-            if (response.data.resultCode === 0) {
-                dispatch(follow(userId, followed));
-            }
-            dispatch(setButtonDisable(userId, false));
-        });
+export const unfollowedUser = (userId: number, followed: boolean): AppThunk => async (dispatch) => {
+    await followUnfollowFlow(dispatch, userId, followed, UsersAPI.unfollow.bind(UsersAPI));
+};
+
+export const followedUser = (userId: number, followed: boolean): AppThunk => async (dispatch) => {
+    await followUnfollowFlow(dispatch, userId, followed, UsersAPI.follow.bind(UsersAPI));
 };
 
 export default userReducer;

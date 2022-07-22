@@ -127,7 +127,7 @@ const LoginForm = (props: LoginFormPropsType) => {
                                 type='text'
                             />
                         </div>
-                      </div>
+                    </div>
                     : ''
                 }
             </form>

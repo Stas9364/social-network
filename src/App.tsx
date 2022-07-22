@@ -28,27 +28,29 @@ class App extends React.Component<AppType> {
 
     render() {
 
-        if (!this.props.initialized) { return <Preloader/>; }
+        if (!this.props.initialized) {
+            return <Preloader/>;
+        }
 
-        return ( <div className='container'>
-                <HeaderContainer/>
-                <Nav/>
-                <div className='app-content'>
-                    <Routes>
-                        <Route path='/profile' element={<ProfileContainer/>}>
-                            <Route path='/profile/:userId' element={<ProfileContainer/>}/>
-                        </Route>
-                        <Route path='/dialogs/*' element={<DialogsContainer/>}/>
-                        <Route path='/users/*' element={<UsersContainer/>}/>
-                        <Route path='/news/*' element={<News/>}/>
-                        <Route path='/music/*' element={<Music/>}/>
-                        <Route path='/settings/*' element={<Settings/>}/>
-                        <Route path='/' element={<Login/>}>
-                            <Route path='/login' element={<Login/>}/>
-                        </Route>
-                    </Routes>
-                </div>
-            </div> );
+        return (<div className='container'>
+            <HeaderContainer/>
+            <Nav/>
+            <div className='app-content'>
+                <Routes>
+                    <Route path='/profile' element={<ProfileContainer/>}>
+                        <Route path='/profile/:userId' element={<ProfileContainer/>}/>
+                    </Route>
+                    <Route path='/dialogs/*' element={<DialogsContainer/>}/>
+                    <Route path='/users/*' element={<UsersContainer/>}/>
+                    <Route path='/news/*' element={<News/>}/>
+                    <Route path='/music/*' element={<Music/>}/>
+                    <Route path='/settings/*' element={<Settings/>}/>
+                    <Route path='/' element={<Login/>}>
+                        <Route path='/login' element={<Login/>}/>
+                    </Route>
+                </Routes>
+            </div>
+        </div>);
     }
 }
 
