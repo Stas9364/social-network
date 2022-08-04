@@ -1,5 +1,11 @@
-
-
 .selectedPage {
     font-weight: bold;
+    background-color: #bddbfa;
+}
+
+.paginator {
+    border: 1px solid black;
+    display: inline-block;
+    width: 3%;
+    text-align: center;
 }

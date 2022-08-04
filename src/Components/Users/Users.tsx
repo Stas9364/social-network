@@ -25,11 +25,6 @@ export const Users: React.FC<UsersPropsType> = React.memo(({
                                                                followedUser,
                                                                unfollowedUser
 }) => {
-    const pagesNumber = Math.ceil((totalUsersCount / pageSize) / 100);
-    const pages = [];
-    for (let i = 1; i <= pagesNumber; i++) {
-        pages.push(i);
-    }
 
     const subscription = (userId: number, followed: boolean) => {
         if (followed) {
@@ -47,8 +42,9 @@ export const Users: React.FC<UsersPropsType> = React.memo(({
                 users={users}
                 onPageUpdate={onPageUpdate}
                 currentPage={currentPage}
-                totalUsersCount={totalUsersCount}
+                totalItemsCount={totalUsersCount}
                 pageSize={pageSize}
+                portionSize={10}
             />
 
             {users.map(u =>

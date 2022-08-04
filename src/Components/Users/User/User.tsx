@@ -11,6 +11,7 @@ type UserPropsType = {
 }
 
 export const User: React.FC<UserPropsType> = React.memo(({user, followingInProgress, subscription}) => {
+
     return (
         <div>
 
