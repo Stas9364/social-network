@@ -15,6 +15,7 @@ import {AppStateType} from './Redux/reduxStore';
 import {initializeApp} from './Redux/appReducer';
 import {Preloader} from './Components/commons/Preloader/Preloader';
 
+
 type MapDispatchPropsType = { initializeApp: () => void }
 type MapStatePropsType = { initialized: boolean }
 

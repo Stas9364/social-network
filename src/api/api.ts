@@ -109,5 +109,12 @@ export const ProfileAPI = {
     },
     updateStatus(value: string) {
         return instance.put<ResponseType>('/profile/status', {status: value});
+    },
+    sendPhoto(image: File) {
+        const formData = new FormData();
+        formData.append('image', image);
+        return instance.put<ResponseType<{photos: {small: string, large: string}}>>('/profile/photo', formData, {
+            headers: {'Content-Type': 'multipart/form-data'}
+        });
     }
 };

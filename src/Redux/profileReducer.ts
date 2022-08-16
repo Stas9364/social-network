@@ -9,7 +9,8 @@ export enum PROFILE_TYPE {
     UPDATE_LIKES_COUNTER = 'UPDATE-LIKES-COUNTER',
     SET_USER_PROFILE = 'SET-USER-PROFILE',
     GET_USER_STATUS = 'GET-USER-STATUS',
-    UPDATE_USER_STATUS = 'UPDATE-USER-STATUS'
+    UPDATE_USER_STATUS = 'UPDATE-USER-STATUS',
+    DOWNLOAD_PHOTO = 'DOWNLOAD-PHOTO'
 }
 
 export type ProfileActionType =
@@ -18,6 +19,7 @@ export type ProfileActionType =
     | ReturnType<typeof setUserProfile>
     | ReturnType<typeof getUserStatus>
     | ReturnType<typeof updateUserStatus>
+    | ReturnType<typeof downloadPhotoSuccess>
 
 export type PostsType = {
     id: string
@@ -60,6 +62,8 @@ export const profileReducer = (state: InitialStateType = initialState, action: P
             return {...state, status: action.status};
         case PROFILE_TYPE.UPDATE_USER_STATUS:
             return {...state, status: action.status};
+        case PROFILE_TYPE.DOWNLOAD_PHOTO:
+            return {...state, profile: {...state.profile, photos: action.photos}};
         default:
             return state;
     }
@@ -72,6 +76,7 @@ export const updateLikesCounter = (id: string) => ({type: PROFILE_TYPE.UPDATE_LI
 export const setUserProfile = (profile: UserProfileType) => ({type: PROFILE_TYPE.SET_USER_PROFILE, profile} as const);
 export const getUserStatus = (status: string) => ({type: PROFILE_TYPE.GET_USER_STATUS, status} as const);
 export const updateUserStatus = (status: string) => ({type: PROFILE_TYPE.UPDATE_USER_STATUS, status} as const);
+export const downloadPhotoSuccess = (photos: {small: string, large: string}) => ({type: PROFILE_TYPE.DOWNLOAD_PHOTO, photos} as const);
 
 //////Thunk
 
@@ -89,5 +94,11 @@ export const updateStatus = (newStatus: string): AppThunk => async (dispatch) =>
     const response = await ProfileAPI.updateStatus(newStatus);
     if (response.data.resultCode === 0) {
         dispatch(updateUserStatus(newStatus));
+    }
+};
+export const downloadPhoto = (photo: File): AppThunk => async (dispatch) => {
+    const response = await ProfileAPI.sendPhoto(photo);
+    if (response.data.resultCode === 0) {
+        dispatch(downloadPhotoSuccess(response.data.data.photos));
     }
 };

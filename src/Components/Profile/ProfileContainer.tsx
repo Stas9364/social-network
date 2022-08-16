@@ -2,7 +2,7 @@ import React from 'react';
 import {Profile} from './Profile';
 import {connect,} from 'react-redux';
 import {AppStateType} from '../../Redux/reduxStore';
-import {getStatus, getUserDescription, updateStatus} from '../../Redux/profileReducer';
+import {downloadPhoto, getStatus, getUserDescription, updateStatus} from '../../Redux/profileReducer';
 import {useParams} from 'react-router-dom';
 import {UserProfileType} from '../../api/api';
 import {withRedirectComponent} from '../../hocRedirectContainer/WithRedirectComponent';
@@ -30,7 +30,7 @@ function withRouter(Component: any) {
 
 class ProfileContainer extends React.Component<ProfileContainerPropsType & PathParamsType> {
 
-    componentDidMount() {
+    refreshProfile() {
         let userId: number | null = Number(this.props.params.userId);
 
         if (!userId) {
@@ -41,16 +41,29 @@ class ProfileContainer extends React.Component<ProfileContainerPropsType & PathP
             this.props.getUserDescription(userId);
             this.props.getStatus(userId);
         }
+    }
+
+    componentDidMount() {
+        this.refreshProfile();
+    };
+
+    componentDidUpdate(prevProps: Readonly<ProfileContainerPropsType & PathParamsType>, prevState: Readonly<{}>) {
+        if (this.props.params.userId !== prevProps.params.userId) {
+            this.refreshProfile();
+        }
     };
 
     render() {
+
         return (
             <div>
                 <Profile
                     {...this.props}
+                    isOwner={!this.props.params.userId}
                     profile={this.props.profile}
                     status={this.props.status}
                     updateStatus={this.props.updateStatus}
+                    downloadPhoto={this.props.downloadPhoto}
                 />
             </div>
         );
@@ -67,6 +80,7 @@ type MapDispatchPropsType = {
     getUserDescription: (userId: number) => void
     getStatus: (userId: number) => void
     updateStatus: (status: string) => void
+    downloadPhoto: (photos: File) => void
 };
 
 const mapStateToProps = (state: AppStateType): MapStatePropsType => {
@@ -78,7 +92,7 @@ const mapStateToProps = (state: AppStateType): MapStatePropsType => {
 };
 
 export default compose<React.ComponentType>(
-    connect(mapStateToProps, {getUserDescription, getStatus, updateStatus}),
+    connect(mapStateToProps, {getUserDescription, getStatus, updateStatus, downloadPhoto}),
     withRouter,
     // withRedirectComponent
 )(ProfileContainer);

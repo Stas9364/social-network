@@ -1,10 +1,17 @@
 import style from './ProfileInfo.module.css';
 import {Preloader} from '../../commons/Preloader/Preloader';
 import {PropsType} from '../Profile';
-import React from 'react';
+import React, {ChangeEvent} from 'react';
 import {ProfileStatus} from './ProfileStatus/ProfileStatus';
+import userPhoto from '../../../IMG/1.jpg';
 
-export const ProfileInfo: React.FC<PropsType> = ({profile,status,updateStatus}) => {
+export const ProfileInfo: React.FC<PropsType> = ({
+                                                     profile,
+                                                     status,
+                                                     updateStatus,
+                                                     isOwner,
+                                                     downloadPhoto
+}) => {
     if (!profile) {
         return <Preloader/>;
     }
@@ -18,13 +25,20 @@ export const ProfileInfo: React.FC<PropsType> = ({profile,status,updateStatus}) 
         res.push(sn +': '+ contacts[sn]);
     }
 
+    const onDownloadAvatar = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files !== null) {
+            downloadPhoto(e.target.files[0]);
+        }
+    };
+
     return (
         <>
             <div className={style.content}>
                 <img
-                    src='https://co14.nevseoboi.com.ua/189/18819/1417188244-6075204-www.nevseoboi.com.ua.jpg'
+                    src={profile.photos && profile.photos.small ? profile?.photos.large : userPhoto}
                     alt='main'
                 />
+                {isOwner && <input type='file' onChange={onDownloadAvatar}/>}
 
                 <ProfileStatus
                     status={status}
